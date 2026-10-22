@@ -11,7 +11,9 @@ const HEIGHT = canvas.height;
 const WORLD_WIDTH = 3200;
 const GRAVITY = 1900;
 const MOVE_SPEED = 300;
-const JUMP_SPEED = 690;
+const JUMP_SPEED = 620;
+const JUMP_HOLD_ACCELERATION = 2300;
+const MAX_JUMP_HOLD_TIME = 0.12;
 
 const platforms = [
   { x: 0, y: 480, width: 650, height: 100 },
@@ -20,18 +22,29 @@ const platforms = [
   { x: 2200, y: 480, width: 1000, height: 100 },
   { x: 270, y: 390, width: 150, height: 20 },
   { x: 860, y: 390, width: 150, height: 20 },
-  { x: 1090, y: 330, width: 150, height: 20 },
   { x: 1570, y: 390, width: 150, height: 20 },
-  { x: 1850, y: 340, width: 150, height: 20 },
   { x: 2350, y: 390, width: 150, height: 20 },
-  { x: 2610, y: 330, width: 150, height: 20 },
 ];
 
 const hazards = [
+  { x: 170, y: 448, width: 52, height: 32 },
+  { x: 350, y: 448, width: 52, height: 32 },
   { x: 500, y: 448, width: 52, height: 32 },
+  { x: 790, y: 448, width: 52, height: 32 },
   { x: 970, y: 448, width: 52, height: 32 },
+  { x: 1140, y: 448, width: 52, height: 32 },
+  { x: 1240, y: 448, width: 52, height: 32 },
+  { x: 1450, y: 448, width: 52, height: 32 },
+  { x: 1570, y: 448, width: 52, height: 32 },
   { x: 1690, y: 448, width: 52, height: 32 },
+  { x: 1810, y: 448, width: 52, height: 32 },
+  { x: 1980, y: 448, width: 52, height: 32 },
+  { x: 2240, y: 448, width: 52, height: 32 },
+  { x: 2370, y: 448, width: 52, height: 32 },
   { x: 2460, y: 448, width: 52, height: 32 },
+  { x: 2660, y: 448, width: 52, height: 32 },
+  { x: 2820, y: 448, width: 52, height: 32 },
+  { x: 3000, y: 448, width: 52, height: 32 },
 ];
 
 const player = {
@@ -42,6 +55,7 @@ const player = {
   velocityX: 0,
   velocityY: 0,
   grounded: false,
+  jumpHoldTime: 0,
 };
 
 const keys = new Set();
@@ -55,6 +69,7 @@ function resetGame() {
   player.velocityX = 0;
   player.velocityY = 0;
   player.grounded = false;
+  player.jumpHoldTime = 0;
   cameraX = 0;
   gameOver = false;
   message.hidden = true;
@@ -65,6 +80,7 @@ function jump() {
   if (player.grounded && !gameOver) {
     player.velocityY = -JUMP_SPEED;
     player.grounded = false;
+    player.jumpHoldTime = 0;
   }
 }
 
@@ -85,6 +101,11 @@ function update(delta) {
   const oldBottom = player.y + player.height;
   player.x = Math.max(0, Math.min(WORLD_WIDTH - player.width, player.x + player.velocityX * delta));
   player.velocityY += GRAVITY * delta;
+  if (keys.has("Space") && player.velocityY < 0 && player.jumpHoldTime < MAX_JUMP_HOLD_TIME) {
+    const holdDelta = Math.min(delta, MAX_JUMP_HOLD_TIME - player.jumpHoldTime);
+    player.velocityY -= JUMP_HOLD_ACCELERATION * holdDelta;
+    player.jumpHoldTime += holdDelta;
+  }
   player.y += player.velocityY * delta;
   player.grounded = false;
 
@@ -96,6 +117,7 @@ function update(delta) {
       player.y = platform.y - player.height;
       player.velocityY = 0;
       player.grounded = true;
+      player.jumpHoldTime = 0;
     }
   }
 
@@ -228,8 +250,9 @@ function frame(time) {
 window.addEventListener("keydown", (event) => {
   const key = event.code;
   if (["ArrowLeft", "ArrowRight", "Space"].includes(key)) event.preventDefault();
+  const isNewPress = !keys.has(key);
   keys.add(key);
-  if (key === "Space" || key === "ArrowUp" || key === "KeyW") jump();
+  if (isNewPress && (key === "Space" || key === "ArrowUp" || key === "KeyW")) jump();
   if (key === "KeyR") resetGame();
 });
 
