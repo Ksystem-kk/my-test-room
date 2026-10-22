@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;700&family=Nunito:wght@600;700;800&display=swap");
+
+:root {
+  color-scheme: dark;
+  font-family: "Nunito", "Kiwi Maru", sans-serif;
+  background: #101b35;
+  color: #f5f3ec;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(49 79 123 / 42%), transparent 58%),
+    #101b35;
+}
+
+.game-shell {
+  width: min(100%, 1040px);
+}
+
+.game-header,
+.game-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.game-header {
+  margin: 0 4px 18px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: #87dbc5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-family: "Kiwi Maru", sans-serif;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.goal-hint {
+  margin: 0;
+  color: #c1cbe0;
+  font-size: 14px;
+}
+
+.game-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgb(210 226 255 / 18%);
+  border-radius: 16px;
+  background: #9bd9e7;
+  box-shadow: 0 24px 70px rgb(0 0 0 / 30%);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.game-footer {
+  margin: 16px 4px 0;
+  color: #c1cbe0;
+  font-size: 13px;
+}
+
+.game-footer p {
+  margin-bottom: 0;
+}
+
+.key {
+  display: inline-block;
+  min-width: 25px;
+  margin: 0 2px;
+  padding: 3px 7px;
+  border: 1px solid rgb(223 233 255 / 22%);
+  border-radius: 6px;
+  background: rgb(255 255 255 / 7%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.separator {
+  padding: 0 6px;
+  color: #7181a0;
+}
+
+.game-message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(12 25 47 / 60%);
+  backdrop-filter: blur(5px);
+}
+
+.game-message[hidden] {
+  display: none;
+}
+
+.message-card {
+  width: min(100%, 360px);
+  padding: 32px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 18px;
+  background: #172746;
+  text-align: center;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 25%);
+}
+
+.message-card h2 {
+  margin: 0 0 8px;
+  font-family: "Kiwi Maru", sans-serif;
+  font-size: 34px;
+}
+
+.message-card p:not(.eyebrow) {
+  margin-bottom: 22px;
+  color: #c1cbe0;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 20px;
+  background: #87dbc5;
+  color: #10243a;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #a5efdc;
+}
+
+button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 22px 12px;
+  }
+
+  .game-header,
+  .game-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .goal-hint,
+  .game-footer {
+    font-size: 12px;
+  }
+
+  .game-footer p {
+    line-height: 1.9;
+  }
+}

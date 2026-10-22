@@ -1,11 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b35">
+  <title>ちいさな冒険 — 横スクロールアクション</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
 </head>
 <body>
-    HALLO NEW'WORLD
+  <main class="game-shell">
+    <header class="game-header">
+      <div>
+        <p class="eyebrow">SIDE-SCROLLING ACTION · MVP</p>
+        <h1>ちいさな冒険</h1>
+      </div>
+      <p class="goal-hint">ゴールの旗を目指そう！</p>
+    </header>
+
+    <section class="game-frame" aria-label="ゲーム画面">
+      <canvas id="game" width="960" height="540" aria-label="横スクロールアクションゲーム">
+        このゲームを遊ぶには、Canvasに対応したブラウザーが必要です。
+      </canvas>
+      <div id="game-message" class="game-message" hidden>
+        <div class="message-card">
+          <p class="eyebrow">STAGE CLEAR</p>
+          <h2>ゴール！</h2>
+          <p>おめでとう！冒険クリアです。</p>
+          <button id="restart-button" type="button">もう一度遊ぶ</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="game-footer">
+      <p><span class="key">←</span> <span class="key">→</span> または <span class="key">A</span> <span class="key">D</span> で移動 <span class="separator">·</span> <span class="key">Space</span> でジャンプ</p>
+      <p id="status" aria-live="polite">足場を渡って、旗まで進もう。</p>
+    </footer>
+  </main>
 </body>
 </html>
