@@ -11,7 +11,9 @@ const HEIGHT = canvas.height;
 const WORLD_WIDTH = 3200;
 const GRAVITY = 1900;
 const MOVE_SPEED = 300;
-const JUMP_SPEED = 690;
+const JUMP_SPEED = 620;
+const JUMP_HOLD_ACCELERATION = 2300;
+const MAX_JUMP_HOLD_TIME = 0.12;
 
 const platforms = [
   { x: 0, y: 480, width: 650, height: 100 },
@@ -42,6 +44,7 @@ const player = {
   velocityX: 0,
   velocityY: 0,
   grounded: false,
+  jumpHoldTime: 0,
 };
 
 const keys = new Set();
@@ -55,6 +58,7 @@ function resetGame() {
   player.velocityX = 0;
   player.velocityY = 0;
   player.grounded = false;
+  player.jumpHoldTime = 0;
   cameraX = 0;
   gameOver = false;
   message.hidden = true;
@@ -65,6 +69,7 @@ function jump() {
   if (player.grounded && !gameOver) {
     player.velocityY = -JUMP_SPEED;
     player.grounded = false;
+    player.jumpHoldTime = 0;
   }
 }
 
@@ -85,6 +90,11 @@ function update(delta) {
   const oldBottom = player.y + player.height;
   player.x = Math.max(0, Math.min(WORLD_WIDTH - player.width, player.x + player.velocityX * delta));
   player.velocityY += GRAVITY * delta;
+  if (keys.has("Space") && player.velocityY < 0 && player.jumpHoldTime < MAX_JUMP_HOLD_TIME) {
+    const holdDelta = Math.min(delta, MAX_JUMP_HOLD_TIME - player.jumpHoldTime);
+    player.velocityY -= JUMP_HOLD_ACCELERATION * holdDelta;
+    player.jumpHoldTime += holdDelta;
+  }
   player.y += player.velocityY * delta;
   player.grounded = false;
 
@@ -96,6 +106,7 @@ function update(delta) {
       player.y = platform.y - player.height;
       player.velocityY = 0;
       player.grounded = true;
+      player.jumpHoldTime = 0;
     }
   }
 
@@ -228,8 +239,9 @@ function frame(time) {
 window.addEventListener("keydown", (event) => {
   const key = event.code;
   if (["ArrowLeft", "ArrowRight", "Space"].includes(key)) event.preventDefault();
+  const isNewPress = !keys.has(key);
   keys.add(key);
-  if (key === "Space" || key === "ArrowUp" || key === "KeyW") jump();
+  if (isNewPress && (key === "Space" || key === "ArrowUp" || key === "KeyW")) jump();
   if (key === "KeyR") resetGame();
 });
 
